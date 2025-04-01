@@ -20,4 +20,12 @@ public:
 
     friend std::ostream& operator<<(std::ostream& out, const Fraction& f);
     friend std::istream& operator>>(std::istream& in, Fraction& f);
+
+    friend bool operator==(const Fraction& a, const Fraction& b){return (a.m_num == b.m_num && a.m_den == b.m_den);}
+    friend bool operator!=(const Fraction& a, const Fraction& b){return !operator==(a, b);}
+    friend bool operator<(const Fraction& a, const Fraction& b){return (a.m_num * b.m_den < b.m_num * a.m_den);}
+    friend bool operator>(const Fraction& a, const Fraction& b){return operator<(b, a);}
+    friend bool operator<=(const Fraction& a, const Fraction& b){return !operator>(a, b);}
+    friend bool operator>=(const Fraction& a, const Fraction& b){return !operator<(a, b);}
+
 };
