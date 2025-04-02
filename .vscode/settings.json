@@ -52,6 +52,9 @@
         "vector": "cpp",
         "algorithm": "cpp",
         "__config": "cpp",
-        "iterator": "cpp"
+        "iterator": "cpp",
+        "charconv": "cpp",
+        "forward_list": "cpp",
+        "iomanip": "cpp"
     }
 }
