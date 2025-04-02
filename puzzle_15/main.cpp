@@ -3,6 +3,11 @@
 #include "Board.h"
 #include "UserInput.h"
 
+class Direction
+{
+    
+};
+
 int main()
 {
     Board board{};
