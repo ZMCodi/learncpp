@@ -3,6 +3,10 @@
 #include <string>
 #include <chrono>
 
+// you and bob live in different cities. how do you ensure that you eat lunch before bob
+// if bob can (and will) follow instructions. well just tell bob to wait for a call before
+// having lunch and you call him after you've had lunch. this code simulates that
+
 bool called = false;
 
 using seconds = std::chrono::seconds;
