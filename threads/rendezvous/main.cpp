@@ -1,5 +1,9 @@
 #include "../../Threads.h"
 
+// a and b are secret agents. everyday they do some spying and
+// then meet up at a rendezvous point to share their secrets
+// this illustrates how rv points require threads to meet at a point
+// before proceeding with their own activities
 std::binary_semaphore aArrived{0};
 std::binary_semaphore bArrived{0};
 
@@ -22,7 +26,6 @@ void A()
         std::cout << "sharing secrets\n";
         sleep(0, 0, secs{3});
     }
-    
 }
 
 void B()
