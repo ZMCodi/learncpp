@@ -1,28 +1,10 @@
-#include <iostream>
-#include <semaphore>
-#include <chrono>
-#include <thread>
-#include <sstream>
 #include <vector>
-
-#include "../../Random.h"
+#include "../../Threads.h"
 
 // demo for semaphore. 5 office workers are working and sometimes they go
 // on toilet breaks. however, there are only 3 stalls so if they are full
 // (i.e. semaphore is 0) then they have to go back to work and only if 
 // someone leaves the toilet can they try and go again
-
-using secs = std::chrono::seconds;
-void sleep(int min, int max, secs sec = secs{0}) 
-{
-    if (sec == secs{0})
-    {
-        std::this_thread::sleep_for(secs{Random::get(min, max)});
-    } else
-    {
-        std::this_thread::sleep_for(sec);
-    }
-}
 
 // only 3 stalls in the office
 std::counting_semaphore<3> toilet(3);

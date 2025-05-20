@@ -1,29 +1,10 @@
-#include <iostream>
-#include <atomic>
-#include <thread>
-#include <chrono>
-#include <sstream>
 #include <exception>
-#include "../../Random.h"
+#include "../../Threads.h"
 
 // worker 1 and 2 watch over a nuclear reactor and they are free to take lunch breaks
 // but both cant be at lunch at the same time or else no one is monitoring and
 // reactor can (in this case will) go boom. What is the least number of messages that
 // is required to ensure this never happens? Proposed answer is 1.
-
-// sleep randomly between 2 to 5 seconds
-// or set time (for monitor)
-using secs = std::chrono::seconds;
-void sleep(secs sec = secs{0}) 
-{
-    if (sec == secs{0})
-    {
-        std::this_thread::sleep_for(secs{Random::get(2, 5)});
-    } else
-    {
-        std::this_thread::sleep_for(sec);
-    }
-}
 
 // start with 2 people watching the nuclear reactor
 std::atomic<int> watcher{2};
@@ -38,7 +19,7 @@ void worker(int id)
         std::stringstream message;
         message << "Worker " << id << ": " << "Watching nuclear reactor\n";
         std::cout << message.str();
-        sleep();
+        sleep(5, 8);
 
         // DISCLAIMER: a TOCTOU might happen here
         // but since this is intro we'll let it slide
@@ -57,7 +38,7 @@ void worker(int id)
         std::cout << message.str();
 
         // eating lunch
-        sleep();
+        sleep(2, 5);
         message.str("");
         message << "Worker " << id << ": " << "Finished with lunch\n";
         watcher++;
@@ -77,7 +58,7 @@ void monitor()
             throw std::runtime_error{"BOOM!!!"};
         }
         std::cout << message.str();
-        sleep(secs{1});
+        sleep(0, 0, secs{1});
     }
 
 }
