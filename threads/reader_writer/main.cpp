@@ -1,13 +1,14 @@
 #include "../../Threads.h"
 
 // reader writer problem. at any point in time, any number
-// of readers can read but if a writer wants to enter, the 
-// room must be empty so no obsolete value gets read
+// of readers can read but if a writer wants to write/update a value, 
+// the room must be empty so no obsolete values get read
 
 // jedi younglings go to the archive to read on history of the
 // jedi while every once in a while, a jedi master comes in to
-// update the archives with their newest findings. when the master
-// updates, all younglings need to leave
+// update the archives with their newest findings. the master
+// only updates when the room is empty and no one can enter
+// when a master is updating
 
 // the demo highlights the lightswitch pattern, where the first
 // thread to enter the 'room' will 'turn the switch on' while the
@@ -15,7 +16,9 @@
 
 // the problem with this implementation is that with sufficiently
 // many readers, writers get starved since the room is never empty
-// as readers keep coming in, hence writers never get to enter
+// as readers keep coming in, hence writers never get to enter.
+// change number of younglings to 10 and over time, you will see
+// the jedi masters having to wait very long before getting their turn
 
 std::binary_semaphore roomEmpty{1};
 int numYounglings{};
