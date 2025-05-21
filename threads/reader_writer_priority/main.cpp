@@ -10,7 +10,11 @@ std::binary_semaphore noReaders{1};
 std::binary_semaphore noWriters{1}; // starts open
 int numYounglings{};
 int numMasters{};
-std::mutex mutex;
+
+// we need two mutexes here for reader and writer since they are independent
+// and have their own variables to take care of
+std::mutex readerMutex;
+std::mutex writerMutex;
 
 
 void master(int id)
@@ -21,20 +25,22 @@ void master(int id)
         msg << "Jedi Master " << id <<  " has something new to add to the archive\n";
         std::cout << msg.str();
 
-        mutex.lock();
+        writerMutex.lock();
             ++numMasters; // add to number of masters writing
 
             // lightswitch here
             if (numMasters == 1) // first master to write
             {
                 msg.str("");
-                msg << "Jedi Master " << id << " is first to arrive. Waiting for younglings to leave\n";
+                msg << "Jedi Master " << id << " is first to arrive. Preventing younglings from entering\n";
                 std::cout << msg.str();
-                noReaders.acquire(); // has to wait for younglings to clear out
+                noReaders.acquire(); // blocks any younglings trying to enter
             }
-        mutex.unlock();
+        writerMutex.unlock();
 
-        noWriters.acquire(); // block any other masters as well
+        // this waits for all younglings to leave
+        // and any other masters coming in will block here
+        noWriters.acquire();
 
         // in this section, room is confirmed to be empty so no need
         // for a mutex or lock of any kind
@@ -43,7 +49,7 @@ void master(int id)
         std::cout << "Jedi Master " << id << " is done writing\n";
 
         noWriters.release(); // let other writers in now
-        mutex.lock();
+        writerMutex.lock();
             --numMasters;
 
             if (numMasters == 0) // last master to leave
@@ -53,7 +59,7 @@ void master(int id)
                 std::cout << msg.str();
                 noReaders.release(); // let younglings back in
             }
-        mutex.unlock();
+        writerMutex.unlock();
 
         msg.str("");
         msg << "Jedi Master " << id << " going on next mission\n";
@@ -76,8 +82,10 @@ void youngling(int id)
         msg << "Youngling " << id << " wants to enter the archive\n";
         std::cout << msg.str();
 
-        noReaders.acquire(); // wait for masters to let younglings in
-        // mutex.lock(); we dont need the mutex anymore since noReaders act as the mutex
+        // wait for masters to let younglings back in
+        // or for the youngling who just entered to signal
+        noReaders.acquire(); 
+        readerMutex.lock(); // we still need this to guard if one reader is entering while one is exiting
             ++numYounglings;
 
             if (numYounglings == 1)
@@ -87,8 +95,8 @@ void youngling(int id)
                 std::cout << msg.str();
                 noWriters.acquire(); // block masters from coming in
             }
-        // mutex.unlock();
-        noReaders.release();
+        readerMutex.unlock();
+        noReaders.release(); // let the next youngling in
 
         msg.str("");
         msg << "Youngling " << id << " entered the archive and is reading some books\n";
@@ -99,7 +107,7 @@ void youngling(int id)
         msg << "Youngling " << id << " is leaving the archives\n";
         std::cout << msg.str();
 
-        mutex.lock();
+        readerMutex.lock();
             --numYounglings;
 
             if (numYounglings == 0)
@@ -109,7 +117,7 @@ void youngling(int id)
                 std::cout << msg.str();
                 noWriters.release();
             }
-        mutex.unlock();
+        readerMutex.unlock();
 
         sleep(2, 5);
     }
