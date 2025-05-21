@@ -17,13 +17,13 @@ void work(int id)
     {
         // workers start off working
         std::stringstream message;
-        message << "Worker " << id << " is working\n";
+        message << "Worker " << id << " is working" << std::endl;
         std::cout << message.str();
         sleep(5, 10); // simulate working
 
         // time for toilet break
         message.str("");
-        message << "Worker " << id << " is going for a toilet break\n";
+        message << "Worker " << id << " is going for a toilet break" << std::endl;
         std::cout << message.str();
         --working;
 
@@ -31,12 +31,12 @@ void work(int id)
         if (toilet.try_acquire())
         {
             message.str("");
-            message << "Toilet is empty. Worker " << id << " is relieving himself\n";
+            message << "Toilet is empty. Worker " << id << " is relieving himself" << std::endl;
             std::cout << message.str();
             sleep(2, 3); // simulate relieving
 
             message.str("");
-            message << "Worker " << id << " is done with toilet break. Going back to work :D\n";
+            message << "Worker " << id << " is done with toilet break. Going back to work :D" << std::endl;
             std::cout << message.str();
             toilet.release();
         } else
@@ -44,7 +44,7 @@ void work(int id)
             // we could make them get into a queue here but this is an intro program
             // so we'll just make them go back to work holding their urges
             message.str("");
-            message << "Toilet is full. Worker " << id << " is returning back to work :(\n";
+            message << "Toilet is full. Worker " << id << " is returning back to work :(" << std::endl;
             std::cout << message.str();
         }
 
@@ -57,7 +57,7 @@ void monitor()
     while (true)
     {
         std::stringstream message;
-        message << working << " workers working\n";
+        message << working << " workers working" << std::endl;
         std::cout << message.str();
         sleep(0, 0, secs{2}); // update every two seconds
     }

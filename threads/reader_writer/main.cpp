@@ -30,21 +30,21 @@ void master(int id)
     while (true)
     {
         std::stringstream msg;
-        msg << "Jedi Master " << id <<  " has something new to add to the archive\n";
+        msg << "Jedi Master " << id <<  " has something new to add to the archive" << std::endl;
         std::cout << msg.str();
 
         roomEmpty.acquire(); // wait for room to be empty before entering
 
         // in this section, room is confirmed to be empty so no need
         // for a mutex or lock of any kind
-        std::cout << "Jedi Master " << id << " writing to archives\n";
+        std::cout << "Jedi Master " << id << " writing to archives" << std::endl;
         sleep(2, 5);
-        std::cout << "Jedi Master " << id << " is done writing\n";
+        std::cout << "Jedi Master " << id << " is done writing" << std::endl;
 
         roomEmpty.release(); // let all threads know room is empty again
 
         msg.str("");
-        msg << "Jedi Master " << id << " going on next mission\n";
+        msg << "Jedi Master " << id << " going on next mission" << std::endl;
         std::cout << msg.str();
         sleep(5, 10); // gather more intel to add to archives
     }
@@ -57,7 +57,7 @@ void youngling(int id)
     {
         std::stringstream msg;
 
-        msg << "Youngling " << id << " wants to enter the archive\n";
+        msg << "Youngling " << id << " wants to enter the archive" << std::endl;
         std::cout << msg.str();
 
         mutex.lock();
@@ -68,7 +68,7 @@ void youngling(int id)
                 // has to wait for room to be empty and signal it isn't anymore
                 // while it waits here, everyone else blocks at mutex
                 msg.str("");
-                msg << "Youngling " << id << " is first to arrive. Waiting for room to be empty\n";
+                msg << "Youngling " << id << " is first to arrive. Waiting for room to be empty" << std::endl;
                 std::cout << msg.str();
                 roomEmpty.acquire();
             }
@@ -76,12 +76,12 @@ void youngling(int id)
         mutex.unlock();
 
         msg.str("");
-        msg << "Youngling " << id << " entered the archive and is reading some books\n";
+        msg << "Youngling " << id << " entered the archive and is reading some books" << std::endl;
         std::cout << msg.str();
         sleep(1, 2); // reading only takes a short time
 
         msg.str("");
-        msg << "Youngling " << id << " is leaving the archives\n";
+        msg << "Youngling " << id << " is leaving the archives" << std::endl;
         std::cout << msg.str();
 
         mutex.lock();
@@ -92,7 +92,7 @@ void youngling(int id)
                 // signals that the room is now empty for any
                 // masters to come in and update archives
                 msg.str("");
-                msg << "Youngling " << id << " is last to leave. Telling masters that room is empty\n";
+                msg << "Youngling " << id << " is last to leave. Telling masters that room is empty" << std::endl;
                 std::cout << msg.str();
                 roomEmpty.release();
             }

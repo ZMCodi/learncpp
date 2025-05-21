@@ -8,24 +8,24 @@ bool called = false;
 
 void you()
 {
-    std::cout << "You: Eat breakfast\n";
+    std::cout << "You: Eat breakfast" << std::endl;
     sleep(0, 0, secs{1});
-    std::cout << "You: Work\n";
+    std::cout << "You: Work" << std::endl;
     sleep(0, 0, secs{2});
-    std::cout << "You: Eat lunch\n";
+    std::cout << "You: Eat lunch" << std::endl;
     sleep(0, 0, secs{1});
-    std::cout << "You: Call Bob\n";
+    std::cout << "You: Call Bob" << std::endl;
     called = true;
 }
 
 void bob()
 {
-    std::cout << "Bob: Eat breakfast\n";
+    std::cout << "Bob: Eat breakfast" << std::endl;
     sleep(0, 0, secs{1});
-    std::cout << "Bob: Wait for a call\n";
+    std::cout << "Bob: Wait for a call" << std::endl;
     while (!called)
     ; // do nothing
-    std::cout << "Bob: Eat lunch\n";
+    std::cout << "Bob: Eat lunch" << std::endl;
 }
 
 int main()

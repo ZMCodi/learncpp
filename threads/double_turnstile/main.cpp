@@ -24,14 +24,14 @@ void themePark(char id)
     {
         std::stringstream msg;
         // driving
-        msg << "Friend " << id << " driving to theme park\n";
+        msg << "Friend " << id << " driving to theme park" << std::endl;
         std::cout << msg.str();
         if (id != 'J') // J lives very close
             sleep(2, 10);
 
         // friend signal that it has arrived
         msg.str("");
-        msg << "Friend " << id << " has arrived at theme park\n";
+        msg << "Friend " << id << " has arrived at theme park" << std::endl;
         std::cout << msg.str();
 
         {
@@ -57,13 +57,13 @@ void themePark(char id)
         turnstile.release();
 
         msg.str("");
-        msg << "Friend " << id << " is in the theme park\n";
+        msg << "Friend " << id << " is in the theme park" << std::endl;
         std::cout << msg.str();
         if (id != 'J') // J doesn't like theme parks very much
             sleep(2, 6);
 
         msg.str("");
-        msg << "Friend " << id << " is done playing and waiting at the exit\n";
+        msg << "Friend " << id << " is done playing and waiting at the exit" << std::endl;
         std::cout << msg.str();
 
         {
@@ -87,7 +87,7 @@ void themePark(char id)
         if (id == 'J')
         {
             msg.str("");
-            std::cout << "\n\nEOD, lets come back again tomorrow\n\n\n";
+            std::cout << "E << std::endlOD, lets come back again tomorrow" << std::endl;
         }
         sleep(0, 0, secs{5});
     }

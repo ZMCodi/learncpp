@@ -23,12 +23,12 @@ void get_forks(size_t i)
 {
     // get left and right forks
     std::stringstream msg;
-    msg << "Philosopher " << i << " picked up left fork (" << i << ")\n";
+    msg << "Philosopher " << i << " picked up left fork (" << i << ")" << std::endl;
     forks[i].acquire();
     std::cout << msg.str();
 
     msg.str("");
-    msg << "Philosopher " << i << " picked up right fork (" << ((i + 1) % 5) << ")\n";
+    msg << "Philosopher " << i << " picked up right fork (" << ((i + 1) % 5) << ")" << std::endl;
     forks[(i + 1) % 5].acquire();
     std::cout << msg.str();
 }
@@ -37,12 +37,12 @@ void put_forks(size_t i)
 {
     // put left and right forks
     std::stringstream msg;
-    msg << "Philosopher " << i << " put down left fork (" << i << ")\n";
+    msg << "Philosopher " << i << " put down left fork (" << i << ")" << std::endl;
     forks[i].release();
     std::cout << msg.str();
 
     msg.str("");
-    msg << "Philosopher " << i << " put down right fork (" << ((i + 1) % 5) << ")\n";
+    msg << "Philosopher " << i << " put down right fork (" << ((i + 1) % 5) << ")" << std::endl;
     forks[(i + 1) % 5].release();
     std::cout << msg.str();
 }
@@ -53,14 +53,14 @@ void philosopher(size_t id)
     {
         // think
         std::stringstream msg;
-        msg << "Philosopher " << id << " thinking...\n";
+        msg << "Philosopher " << id << " thinking..." << std::endl;
         std::cout << msg.str();
         // sleep(2, 5); // this makes achieving deadlock way longer
 
         // eat
         get_forks(id);
         msg.str("");
-        msg << "Philosopher " << id << " eating...\n";
+        msg << "Philosopher " << id << " eating..." << std::endl;
         std::cout << msg.str();
         // sleep(2, 5);
         put_forks(id);

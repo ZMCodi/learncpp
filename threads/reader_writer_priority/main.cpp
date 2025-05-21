@@ -22,7 +22,7 @@ void master(int id)
     while (true)
     {
         std::stringstream msg;
-        msg << "Jedi Master " << id <<  " has something new to add to the archive\n";
+        msg << "Jedi Master " << id <<  " has something new to add to the archive" << std::endl;
         std::cout << msg.str();
 
         writerMutex.lock();
@@ -32,7 +32,7 @@ void master(int id)
             if (numMasters == 1) // first master to write
             {
                 msg.str("");
-                msg << "Jedi Master " << id << " is first to arrive. Preventing younglings from entering\n";
+                msg << "Jedi Master " << id << " is first to arrive. Preventing younglings from entering" << std::endl;
                 std::cout << msg.str();
                 noReaders.acquire(); // blocks any younglings trying to enter
             }
@@ -44,9 +44,9 @@ void master(int id)
 
         // in this section, room is confirmed to be empty so no need
         // for a mutex or lock of any kind
-        std::cout << "Jedi Master " << id << " writing to archives\n";
+        std::cout << "Jedi Master " << id << " writing to archives" << std::endl;
         sleep(2, 5);
-        std::cout << "Jedi Master " << id << " is done writing\n";
+        std::cout << "Jedi Master " << id << " is done writing" << std::endl;
 
         noWriters.release(); // let other writers in now
         writerMutex.lock();
@@ -55,14 +55,14 @@ void master(int id)
             if (numMasters == 0) // last master to leave
             {
                 msg.str("");
-                msg << "Jedi Master " << id << " is last to leave. Letting the younglings back in\n";
+                msg << "Jedi Master " << id << " is last to leave. Letting the younglings back in" << std::endl;
                 std::cout << msg.str();
                 noReaders.release(); // let younglings back in
             }
         writerMutex.unlock();
 
         msg.str("");
-        msg << "Jedi Master " << id << " going on next mission\n";
+        msg << "Jedi Master " << id << " going on next mission" << std::endl;
         std::cout << msg.str();
 
         // big range here so that sometimes writers might come in close succession
@@ -79,7 +79,7 @@ void youngling(int id)
     {
         std::stringstream msg;
 
-        msg << "Youngling " << id << " wants to enter the archive\n";
+        msg << "Youngling " << id << " wants to enter the archive" << std::endl;
         std::cout << msg.str();
 
         // wait for masters to let younglings back in
@@ -91,7 +91,7 @@ void youngling(int id)
             if (numYounglings == 1)
             {
                 msg.str("");
-                msg << "Youngling " << id << " is first to arrive. Waiting for room to be empty\n";
+                msg << "Youngling " << id << " is first to arrive. Waiting for room to be empty" << std::endl;
                 std::cout << msg.str();
                 noWriters.acquire(); // block masters from coming in
             }
@@ -99,12 +99,12 @@ void youngling(int id)
         noReaders.release(); // let the next youngling in
 
         msg.str("");
-        msg << "Youngling " << id << " entered the archive and is reading some books\n";
+        msg << "Youngling " << id << " entered the archive and is reading some books" << std::endl;
         std::cout << msg.str();
         sleep(1, 2);
 
         msg.str("");
-        msg << "Youngling " << id << " is leaving the archives\n";
+        msg << "Youngling " << id << " is leaving the archives" << std::endl;
         std::cout << msg.str();
 
         readerMutex.lock();
@@ -113,7 +113,7 @@ void youngling(int id)
             if (numYounglings == 0)
             {
                 msg.str("");
-                msg << "Youngling " << id << " is last to leave. Telling masters that room is empty\n";
+                msg << "Youngling " << id << " is last to leave. Telling masters that room is empty" << std::endl;
                 std::cout << msg.str();
                 noWriters.release();
             }

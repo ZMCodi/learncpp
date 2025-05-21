@@ -12,18 +12,18 @@ void A()
     while (true)
     {
         // a doing something before rendezvous
-        std::cout << "a doing espionage at CIA\n";
+        std::cout << "a doing espionage at CIA" << std::endl;
         sleep(2, 10);
 
         // a is done, signal that it has arrived
-        std::cout << "a has arrived at rendezvous point\n";
+        std::cout << "a has arrived at rendezvous point" << std::endl;
         aArrived.release();
 
         // wait for b to arrive
         bArrived.acquire();
 
         // share secrets with b
-        std::cout << "sharing secrets\n";
+        std::cout << "sharing secrets" << std::endl;
         sleep(0, 0, secs{3});
     }
 }
@@ -33,11 +33,11 @@ void B()
     while (true)
     {
         // b doing something before rendezvous
-        std::cout << "b doing espionage at FBI\n";
+        std::cout << "b doing espionage at FBI" << std::endl;
         sleep(2, 10);
 
         // b is done, signal that it has arrived
-        std::cout << "b has arrived at rendezvous point\n";
+        std::cout << "b has arrived at rendezvous point" << std::endl;
         bArrived.release();
 
         // wait for a to arrive

@@ -12,13 +12,13 @@ void themePark(char id)
 {
     std::stringstream msg;
     // driving
-    msg << "Friend " << id << " driving to theme park\n";
+    msg << "Friend " << id << " driving to theme park" << std::endl;
     std::cout << msg.str();
     sleep(2, 10);
 
     // friend signal that it has arrived
     msg.str("");
-    msg << "Friend " << id << " has arrived at theme park\n";
+    msg << "Friend " << id << " has arrived at theme park" << std::endl;
     std::cout << msg.str();
     ++friendsArrived;
 
@@ -36,7 +36,7 @@ void themePark(char id)
     turnstile.release();
 
     msg.str("");
-    msg << "Friend " << id << " is in the theme park\n";
+    msg << "Friend " << id << " is in the theme park" << std::endl;
     std::cout << msg.str();
 }
 

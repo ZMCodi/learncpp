@@ -32,7 +32,7 @@ int girls{};
 void guy(char id)
 {
     std::stringstream msg;
-    msg << "Guy " << id << " arrived at the starting line\n";
+    msg << "Guy " << id << " arrived at the starting line" << std::endl;
     std::cout << msg.str();
 
     // take the mutex to check for matches
@@ -40,13 +40,13 @@ void guy(char id)
         msg.str("");
         if (girls > 0) // there is already a girl waiting
         {
-            msg << "Guy " << id << " found a match\n";
+            msg << "Guy " << id << " found a match" << std::endl;
             std::cout << msg.str();
             --girls; // decrement number of girls available
             guyQueue.release(); // signal one girl thread waiting for a guy to unblock
         } else // no girls are waiting to be paired yet
         {
-            msg << "Guy " << id << " is waiting for a match\n";
+            msg << "Guy " << id << " is waiting for a match" << std::endl;
             std::cout << msg.str();
             ++guys; // add to number of guys waiting
             spotlight.unlock(); // release mutex so other ppl can check for a match
@@ -55,12 +55,12 @@ void guy(char id)
 
         // atp the guy is matched and doing the game
         msg.str("");
-        msg << "Guy " << id << " is doing the math questions\n";
+        msg << "Guy " << id << " is doing the math questions" << std::endl;
         std::cout << msg.str();
         sleep(2, 5); // take some time to answer questions
 
         msg.str("");
-        msg << "Guy "<< id << " is done!\n";
+        msg << "Guy "<< id << " is done!" << std::endl;
 
         // wait for girl to finish since guy will be releasing the mutex
         finishLine.acquire();
@@ -75,7 +75,7 @@ void guy(char id)
 void girl(char id)
 {
     std::stringstream msg;
-    msg << "Girl " << id << " arrived at the starting line\n";
+    msg << "Girl " << id << " arrived at the starting line" << std::endl;
     std::cout << msg.str();
 
     // take mutex to check for matches
@@ -83,13 +83,13 @@ void girl(char id)
         msg.str("");
         if (guys > 0) // there is already a guy waiting
         {
-            msg << "Girl " << id << " found a match\n";
+            msg << "Girl " << id << " found a match" << std::endl;
             std::cout << msg.str();
             --guys; // decrement number of guys waiting
             girlQueue.release(); // signal the guy waiting to unblock
         } else // no guy is waiting yet
         {
-            msg << "Girl " << id << " is waiting for a match\n";
+            msg << "Girl " << id << " is waiting for a match" << std::endl;
             std::cout << msg.str();
             ++girls; // one more girl waiting
             spotlight.unlock(); // release mutex so others can get paired
@@ -98,12 +98,12 @@ void girl(char id)
 
     // atp the girl is paired and doing the game
     msg.str("");
-    msg << "Girl " << id << " is doing the science questions\n";
+    msg << "Girl " << id << " is doing the science questions" << std::endl;
     std::cout << msg.str();
     sleep(1, 4); // take some time to answer questions
 
     msg.str("");
-    msg << "Girl " << id << " is done!\n";
+    msg << "Girl " << id << " is done!" << std::endl;
     std::cout << msg.str();
     finishLine.release(); // let the guy know that she is done to cross finish line
     // no releasing of mutex here since the guy will be unlocking

@@ -22,13 +22,13 @@ void producer(int id)
     while (true)
     {
         std::stringstream msg;
-        msg << "Producer " << id << " producing...\n";
+        msg << "Producer " << id << " producing..." << std::endl;
         std::cout << msg.str();
         sleep(2, 5); // simulate waiting to produce
 
         int product{Random::get(1, 100)};
         msg.str("");
-        msg << "Producer " << id << " produced " << product << '\n';
+        msg << "Producer " << id << " produced " << product << std::endl;
 
         // wait for space to put stuff
         spaces.acquire(); // if full, blocks here
@@ -36,7 +36,7 @@ void producer(int id)
             std::lock_guard<std::mutex> lock(mutex);
             buffer.push_back(product); // 'produce' and push into queue
 
-            std::cout << "Producer " << id << " added " << product << " to buffer\n";
+            std::cout << "Producer " << id << " added " << product << " to buffer" << std::endl;
             items.release(); // let consumers know an item was added
         }
     }
@@ -47,7 +47,7 @@ void consumer(int id)
     while (true)
     {
         std::stringstream msg;
-        msg << "Consumer " << id << " trying to consume\n";
+        msg << "Consumer " << id << " trying to consume" << std::endl;
         std::cout << msg.str();
 
         int product;
@@ -57,12 +57,12 @@ void consumer(int id)
             std::lock_guard<std::mutex> lock(mutex);
             product = buffer.front();
             buffer.pop_front(); // std::queue doesn't return the element on pop lol
-            std::cout << "Consumer " << id << " retrieved " << product << " from buffer\n";
+            std::cout << "Consumer " << id << " retrieved " << product << " from buffer" << std::endl;
             spaces.release(); // let producers know there is an empty space
         }
 
         msg.str("");
-        msg << "Consumer " << id << " is processing " << product << '\n';
+        msg << "Consumer " << id << " is processing " << product << std::endl;
         std::cout << msg.str();
         sleep(1, 3); // processing is quicker in this case
     }
@@ -79,7 +79,7 @@ void monitor()
         {
             msg << prod << ' ';
         }
-        msg << "]\n";
+        msg << "]" << std::endl;
 
         std::cout << msg.str();
     }

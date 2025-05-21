@@ -17,7 +17,7 @@ void worker(int id)
     while (true)
     {
         std::stringstream message;
-        message << "Worker " << id << ": " << "Watching nuclear reactor\n";
+        message << "Worker " << id << ": " << "Watching nuclear reactor" << std::endl;
         std::cout << message.str();
         sleep(5, 8);
 
@@ -34,13 +34,13 @@ void worker(int id)
         atLunch = true;
         watcher--;
         message.str("");
-        message << "Worker " << id << ": " << "Going to lunch\n";
+        message << "Worker " << id << ": " << "Going to lunch" << std::endl;
         std::cout << message.str();
 
         // eating lunch
         sleep(2, 5);
         message.str("");
-        message << "Worker " << id << ": " << "Finished with lunch\n";
+        message << "Worker " << id << ": " << "Finished with lunch" << std::endl;
         watcher++;
         atLunch = false;
     }
@@ -51,7 +51,7 @@ void monitor()
     while (true)
     {
         std::stringstream message;
-        message << "Number of watchers: " << watcher << '\n';
+        message << "Number of watchers: " << watcher << std::endl;
         if (watcher <= 0)
         {
             // nuclear reactor goes boom
