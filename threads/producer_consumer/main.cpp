@@ -5,7 +5,9 @@
 // classic producer consumer problem
 // producer adds stuff into buffer
 // consumer takes stuff out
-// sync using mutex on buffer and flags for empty/full
+// only one thread can access the buffer at one time
+// producer can only put into buffer if there is space
+// consumer can only take from buffer if there are items
 // no good analogy here but i think the problem is easy enough to understand
 
 constexpr int BUFFER_SIZE{5};
