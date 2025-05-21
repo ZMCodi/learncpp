@@ -54,6 +54,7 @@ void match_smoker()
     paper.acquire();
     std::cout << "Smoker with match getting tobacco" << std::endl;
     tobacco.acquire();
+    std::cout << "Smoker with match making cigarettes" << std::endl;
     agentSem.release();
 }
 
@@ -63,6 +64,7 @@ void tobacco_smoker()
     match.acquire();
     std::cout << "Smoker with tobacco getting paper" << std::endl;
     paper.acquire();
+    std::cout << "Smoker with tobacco making cigarettes" << std::endl;
     agentSem.release();
 }
 
@@ -72,6 +74,7 @@ void paper_smoker()
     tobacco.acquire();
     std::cout << "Smoker with paper getting match" << std::endl;
     match.acquire();
+    std::cout << "Smoker with paper making cigarettes" << std::endl;
     agentSem.release();
 }
 
