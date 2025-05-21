@@ -1,14 +1,14 @@
 #include "../../Threads.h"
 
-// to solve this deadlock, we need pushers that synchronize with each other
-// and determine which smoker to signal based on which resources are available
+// this is a more generalized problem where agents dont wait for smokers to
+// make the cigs but instead just keep pushing out ingredients as they please
+// but to make the output somewhat easier to follow, we add a 1 sec pause for each agent
 
 using sem = std::binary_semaphore;
 
 sem tobacco{0};
 sem paper{0};
 sem match{0};
-sem agentSem{1};
 
 // agent threads. each subagent waits for agentSem to be signalled
 // and then provides the ingredients that they carry. In the interesting
@@ -19,11 +19,11 @@ void not_match()
 {
     while (true)
     {
-        agentSem.acquire();
-        std::cout << "Agent A providing tobacco" << std::endl;
+        std::cout << "Agent A providing tobacco\n";
         tobacco.release();
-        std::cout << "Agent A providing paper" << std::endl;
+        std::cout << "Agent A providing paper\n";
         paper.release();
+        sleep(0, 0, secs{1});
     }
 }
 
@@ -32,11 +32,11 @@ void not_tobacco()
 {
     while (true)
     {
-        agentSem.acquire();
-        std::cout << "Agent B providing paper" << std::endl;
+        std::cout << "Agent B providing paper\n";
         paper.release();
-        std::cout << "Agent B providing match" << std::endl;
+        std::cout << "Agent B providing match\n";
         match.release();
+        sleep(0, 0, secs{1});
     }
 }
 
@@ -45,20 +45,20 @@ void not_paper()
 {
     while (true)
     {
-        agentSem.acquire();
-        std::cout << "Agent C providing match" << std::endl;
+        std::cout << "Agent C providing match\n";
         match.release();
-        std::cout << "Agent C providing tobacco" << std::endl;
+        std::cout << "Agent C providing tobacco\n";
         tobacco.release();
+        sleep(0, 0, secs{1});
     }
 }
 
-// the pushers track what resources are available and decide to signal the appropriate smoker
+// the pushers now have to track how many ingredients as opposed to boolean flags
 
 // flags for tracking resources
-bool isPaper{false};
-bool isTobacco{false};
-bool isMatch{false};
+int isPaper{};
+int isTobacco{};
+int isMatch{};
 
 // semaphores to signal the smokers
 sem paperSem{0};
@@ -73,25 +73,27 @@ void paperPusher()
     while (true)
     {
         paper.acquire();
-        std::cout << "Pusher got paper" << std::endl;
+        std::cout << "Pusher got paper\n";
 
         mutex.lock();
         if (isTobacco)
         {
             // if tobacco already available
-            isTobacco = false;
-            std::cout << "Signalling match smoker" << std::endl;
+            --isTobacco;
+            std::cout << "Signalling match smoker\n";
             matchSem.release();
         } else if (isMatch)
         {
             // if match already available
-            isMatch = false;
-            std::cout << "Signalling tobacco smoker" << std::endl;
+            --isMatch;
+            std::cout << "Signalling tobacco smoker\n";
             tobaccoSem.release();
         } else
         {
             // if nothing else is available (first pusher)
-            isPaper = true;
+            std::stringstream msg;
+            msg << "Paper stock: " << ++isPaper << "\n";
+            std::cout << msg.str();
         }
 
         mutex.unlock();
@@ -103,22 +105,24 @@ void matchPusher()
     while (true)
     {
         match.acquire();
-        std::cout << "Pusher got match" << std::endl;
+        std::cout << "Pusher got match\n";
 
         mutex.lock();
         if (isTobacco)
         {
-            isTobacco = false;
-            std::cout << "Signalling paper smoker" << std::endl;
+            --isTobacco;
+            std::cout << "Signalling paper smoker\n";
             paperSem.release();
         } else if (isPaper)
         {
-            isPaper = false;
-            std::cout << "Signalling tobacco smoker" << std::endl;
+            --isPaper;
+            std::cout << "Signalling tobacco smoker\n";
             tobaccoSem.release();
         } else
         {
-            isMatch = true;
+            std::stringstream msg;
+            msg << "Match stock: " << ++isMatch << "\n";
+            std::cout << msg.str();
         }
 
         mutex.unlock();
@@ -130,38 +134,40 @@ void tobaccoPusher()
     while (true)
     {
         tobacco.acquire();
-        std::cout << "Pusher got tobacco" << std::endl;
+        std::cout << "Pusher got tobacco\n";
 
         mutex.lock();
         if (isMatch)
         {
-            isMatch = false;
-            std::cout << "Signalling paper smoker" << std::endl;
+            --isMatch;
+            std::cout << "Signalling paper smoker\n";
             paperSem.release();
         } else if (isPaper)
         {
-            isPaper = false;
-            std::cout << "Signalling match smoker" << std::endl;
+            --isPaper;
+            std::cout << "Signalling match smoker\n";
             matchSem.release();
         } else
         {
-            isTobacco = true;
+            std::stringstream msg;
+            msg << "Tobacco stock: " << ++isTobacco << "\n";
+            std::cout << msg.str();
         }
 
         mutex.unlock();
     }
 }
 
-// each smoker just waits for the signal from their pushers
+// in this case, the smokers dont take time though they should
+// but this demo is to just show how the pushers work in case
+// of the agents not waiting
 
 void match_smoker()
 {
     while (true)
     {
         matchSem.acquire();
-        std::cout << "Smoker with match making cigarettes" << std::endl;
-        sleep(1, 3); // remove this to see no deadlock happens
-        agentSem.release();
+        std::cout << "Smoker with match making cigarettes\n";
     }
 }
 
@@ -170,9 +176,7 @@ void tobacco_smoker()
     while (true)
     {
         tobaccoSem.acquire();
-        std::cout << "Smoker with tobacco making cigarettes" << std::endl;
-        sleep(1, 3); // remove this to see no deadlock happens
-        agentSem.release();
+        std::cout << "Smoker with tobacco making cigarettes\n";
     }
 }
 
@@ -181,9 +185,7 @@ void paper_smoker()
     while (true)
     {
         paperSem.acquire();
-        std::cout << "Smoker with paper making cigarettes" << std::endl;
-        sleep(1, 3); // remove this to see no deadlock happens
-        agentSem.release();
+        std::cout << "Smoker with paper making cigarettes\n";
     }
 }
 
