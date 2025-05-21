@@ -5,6 +5,7 @@
 #include <sstream>
 #include <atomic>
 #include <mutex>
+#include <vector>
 #include "Random.h"
 
 using secs = std::chrono::seconds;
@@ -18,3 +19,5 @@ void sleep(int min, int max, secs sec = secs{0})
         std::this_thread::sleep_for(sec);
     }
 }
+
+using threads = std::vector<std::thread>;
