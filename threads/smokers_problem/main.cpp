@@ -18,31 +18,40 @@ sem agentSem{1};
 // agent A
 void not_match()
 {
-    agentSem.acquire();
-    std::cout << "Agent A providing tobacco" << std::endl;
-    tobacco.release();
-    std::cout << "Agent A providing paper" << std::endl;
-    paper.release();
+    while (true)
+    {
+        agentSem.acquire();
+        std::cout << "Agent A providing tobacco" << std::endl;
+        tobacco.release();
+        std::cout << "Agent A providing paper" << std::endl;
+        paper.release();
+    }
 }
 
 // agent B
 void not_tobacco()
 {
-    agentSem.acquire();
-    std::cout << "Agent B providing paper" << std::endl;
-    paper.release();
-    std::cout << "Agent B providing match" << std::endl;
-    match.release();
+    while (true)
+    {
+        agentSem.acquire();
+        std::cout << "Agent B providing paper" << std::endl;
+        paper.release();
+        std::cout << "Agent B providing match" << std::endl;
+        match.release();
+    }
 }
 
 // agent C
 void not_paper()
 {
-    agentSem.acquire();
-    std::cout << "Agent C providing match" << std::endl;
-    match.release();
-    std::cout << "Agent C providing tobacco" << std::endl;
-    tobacco.release();
+    while (true)
+    {
+        agentSem.acquire();
+        std::cout << "Agent C providing match" << std::endl;
+        match.release();
+        std::cout << "Agent C providing tobacco" << std::endl;
+        tobacco.release();
+    }
 }
 
 // each smoker has one ingredient and waits for the other two from the agent
@@ -50,32 +59,44 @@ void not_paper()
 
 void match_smoker()
 {
-    std::cout << "Smoker with match getting paper" << std::endl;
-    paper.acquire();
-    std::cout << "Smoker with match getting tobacco" << std::endl;
-    tobacco.acquire();
-    std::cout << "Smoker with match making cigarettes" << std::endl;
-    agentSem.release();
+    while (true)
+    {
+
+        std::cout << "Smoker with match getting paper" << std::endl;
+        paper.acquire();
+        std::cout << "Smoker with match getting tobacco" << std::endl;
+        tobacco.acquire();
+        std::cout << "Smoker with match making cigarettes" << std::endl;
+        agentSem.release();
+    }
 }
 
 void tobacco_smoker()
 {
-    std::cout << "Smoker with tobacco getting match" << std::endl;
-    match.acquire();
-    std::cout << "Smoker with tobacco getting paper" << std::endl;
-    paper.acquire();
-    std::cout << "Smoker with tobacco making cigarettes" << std::endl;
-    agentSem.release();
+    while (true)
+    {
+
+        std::cout << "Smoker with tobacco getting match" << std::endl;
+        match.acquire();
+        std::cout << "Smoker with tobacco getting paper" << std::endl;
+        paper.acquire();
+        std::cout << "Smoker with tobacco making cigarettes" << std::endl;
+        agentSem.release();
+    }
 }
 
 void paper_smoker()
 {
-    std::cout << "Smoker with paper getting tobacco" << std::endl;
-    tobacco.acquire();
-    std::cout << "Smoker with paper getting match" << std::endl;
-    match.acquire();
-    std::cout << "Smoker with paper making cigarettes" << std::endl;
-    agentSem.release();
+    while (true)
+    {
+
+        std::cout << "Smoker with paper getting tobacco" << std::endl;
+        tobacco.acquire();
+        std::cout << "Smoker with paper getting match" << std::endl;
+        match.acquire();
+        std::cout << "Smoker with paper making cigarettes" << std::endl;
+        agentSem.release();
+    }
 }
 
 int main()
